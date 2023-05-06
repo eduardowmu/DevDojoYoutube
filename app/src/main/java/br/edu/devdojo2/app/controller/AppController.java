@@ -39,4 +39,21 @@ public class AppController {
         var anime = this.animeService.findById(id);
         return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<HttpStatus> deleteAnime(@PathVariable Long id) {
+        var anime = this.animeService.findById(id);
+        if(anime.isPresent()) {
+            this.animeService.delete(anime.get());
+            return ResponseEntity.ok(HttpStatus.resolve(200));
+        }
+        return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<HttpStatus> updateAnime(@RequestBody Anime anime) {
+        var request = this.animeService.findById(anime.getId());
+        return ResponseEntity.ok(request.isPresent() && this.animeService.save(anime) != null ?
+                HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
+    }
 }

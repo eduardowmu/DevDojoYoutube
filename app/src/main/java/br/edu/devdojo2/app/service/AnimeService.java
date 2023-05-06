@@ -40,4 +40,8 @@ public class AnimeService {
         * */
         return this.animeRepository.findById(id);
     }
+
+    public void delete(Anime anime) {
+        this.animeRepository.delete(anime);
+    }
 }
