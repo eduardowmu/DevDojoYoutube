@@ -1,7 +1,9 @@
 package br.edu.devdojo2.app.controller;
 
+import br.edu.devdojo2.app.Exception.BadRequestException;
 import br.edu.devdojo2.app.Exception.NotFoundException;
 import br.edu.devdojo2.app.dto.AnimePostReqDto;
+import br.edu.devdojo2.app.dto.AnimeRespDto;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.service.AnimeService;
 import br.edu.devdojo2.app.util.DateUtil;
@@ -31,16 +33,26 @@ public class AppController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Anime>> findAll() {
+    public ResponseEntity<List<AnimeRespDto>> findAll() {
         System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
-
-        return ResponseEntity.ok(animeService.listAll());
+        List<AnimeRespDto> respDtos = animeService.listAll();;
+        return ResponseEntity.ok(respDtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Anime> findById(@PathVariable Long id) {
         Optional<Anime> anime = this.animeService.findById(id);
         return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
+    }
+
+    /*A diferença entre PathVariable e RequestParam é que usando PathVariable,
+    *Por mais que vc insira um nome de parametro diferente, o Spring não consegue
+    *diferenciar o Long id do metodo findById() de findByName(). Além disso, o
+    *PathVariable não consegue reconhecer valor com espaço(s).*/
+    @GetMapping("/find")
+    public ResponseEntity<List<AnimeRespDto>> findByName(@RequestParam String name) {
+        List<AnimeRespDto> respDtos = this.animeService.findByName(name);
+        return ResponseEntity.ok(respDtos);
     }
 
     @DeleteMapping("/delete/{id}")

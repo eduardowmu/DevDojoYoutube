@@ -18,7 +18,6 @@ public class Anime {
     @Column(nullable = false)
     private String name;
 
-    /*
     public Long getId() {
         return id;
     }
@@ -34,5 +33,4 @@ public class Anime {
     public void setName(String name) {
         this.name = name;
     }
-    */
 }

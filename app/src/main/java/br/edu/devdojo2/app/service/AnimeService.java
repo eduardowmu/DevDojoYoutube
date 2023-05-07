@@ -1,11 +1,13 @@
 package br.edu.devdojo2.app.service;
 
 import br.edu.devdojo2.app.dto.AnimePostReqDto;
+import br.edu.devdojo2.app.dto.AnimeRespDto;
 import br.edu.devdojo2.app.mapper.AnimeMapper;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +21,20 @@ public class AnimeService {
     @Autowired
     private AnimeMapper animeMapper;
 
+    /*Esta notação serve para quando queremos que, numa ação
+    *indesejada na base de dados, o spring realize o rollback,
+    *em ocorrência de Exception*/
+    @Transactional(rollbackFor = Exception.class)
     public Anime save(AnimePostReqDto reqDto) {
         Anime anime = animeMapper.toModel(reqDto);
         return this.animeRepository.save(anime);
     }
 
-    public List<Anime> listAll() {
+    public List<AnimeRespDto> listAll() {
         List<Anime> animes = this.animeRepository.findAll();
-
-        return animes;
+        List<AnimeRespDto> respDtos = new ArrayList<>();
+        animes.stream().forEach(a -> respDtos.add(this.animeMapper.toRespDto(a)));
+        return respDtos;
     }
 
     public Optional<Anime> findById(Long id) {
@@ -45,6 +52,13 @@ public class AnimeService {
         *       include-stackTrace: never
         * */
         return this.animeRepository.findById(id);
+    }
+
+    public List<AnimeRespDto> findByName(String name) {
+        List<Anime> animes = this.animeRepository.findByName(name);
+        List<AnimeRespDto> respDtos = new ArrayList<>();
+        animes.stream().forEach(a -> respDtos.add(this.animeMapper.toRespDto(a)));
+        return respDtos;
     }
 
     public void delete(Anime anime) {

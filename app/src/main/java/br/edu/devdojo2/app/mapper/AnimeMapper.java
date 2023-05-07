@@ -10,11 +10,11 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AnimeMapper {
-    @Mapping(source = "reqDto.id", target = "id")
-    @Mapping(source = "reqDto.name", target = "name")
+    @Mapping(target = "id", source = "reqDto.id")
+    @Mapping(target = "name", source = "reqDto.name")
     Anime toModel(AnimePostReqDto reqDto);
 
-    @Mapping(source = "anime.id", target = "id")
-    @Mapping(source = "anime.name", target = "name")
+    @Mapping(target = "id", source = "anime.id")
+    @Mapping(target = "name", source = "anime.name")
     AnimeRespDto toRespDto(Anime anime);
 }
