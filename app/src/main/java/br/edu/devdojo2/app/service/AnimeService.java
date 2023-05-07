@@ -1,5 +1,7 @@
 package br.edu.devdojo2.app.service;
 
+import br.edu.devdojo2.app.dto.AnimePostReqDto;
+import br.edu.devdojo2.app.mapper.AnimeMapper;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,11 @@ public class AnimeService {
     @Autowired
     private AnimeRepository animeRepository;
 
-    public Anime save(Anime anime) {
+    @Autowired
+    private AnimeMapper animeMapper;
+
+    public Anime save(AnimePostReqDto reqDto) {
+        Anime anime = animeMapper.toModel(reqDto);
         return this.animeRepository.save(anime);
     }
 
