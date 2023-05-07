@@ -24,7 +24,8 @@ public class AppController {
 
     @PostMapping("/save")
     public ResponseEntity<HttpStatus> saveAnime(@RequestBody Anime anime) {
-        return ResponseEntity.ok(this.animeService.save(anime) != null ? HttpStatus.CREATED : HttpStatus.EXPECTATION_FAILED);
+        return ResponseEntity.ok(this.animeService.save(anime) != null ?
+                HttpStatus.CREATED : HttpStatus.EXPECTATION_FAILED);
     }
 
     @GetMapping("/list")
