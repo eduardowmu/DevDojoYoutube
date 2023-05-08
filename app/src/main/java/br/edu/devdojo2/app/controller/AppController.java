@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class AppController {
     @Autowired
     private AnimeService animeService;
 
-    @PostMapping("/save")
-    public ResponseEntity<HttpStatus> saveAnime(@RequestBody AnimePostReqDto reqDto) {
+    @PostMapping("/save")//@Valid irá impedir que entre um body da requisição esteja com name invalido
+    public ResponseEntity<HttpStatus> saveAnime(@RequestBody @Valid AnimePostReqDto reqDto) {
         return ResponseEntity.ok(this.animeService.save(reqDto) != null ?
                 HttpStatus.CREATED : HttpStatus.EXPECTATION_FAILED);
     }
