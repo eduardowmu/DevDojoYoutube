@@ -37,6 +37,10 @@ public class AnimeService {
         return animes;
     }
 
+    public List<Anime> findAll() {
+        return this.animeRepository.findAll();
+    }
+
     public Optional<Anime> findById(Long id) {
         /*
         *Podemos resolver tambem assim

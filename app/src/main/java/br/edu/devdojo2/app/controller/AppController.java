@@ -47,6 +47,15 @@ public class AppController {
         return ResponseEntity.ok(animes);
     }
 
+    /*Buscando através de um retorno de lista ao invés de Page
+    *com restTemplate*/
+    @GetMapping
+    public ResponseEntity<List<Anime>> listAll() {
+        System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
+        List<Anime> animes = animeService.findAll();
+        return ResponseEntity.ok(animes);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Anime> findById(@PathVariable Long id) {
         Optional<Anime> anime = this.animeService.findById(id);
