@@ -6,6 +6,8 @@ import br.edu.devdojo2.app.mapper.AnimeMapper;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +32,9 @@ public class AnimeService {
         return this.animeRepository.save(anime);
     }
 
-    public List<AnimeRespDto> listAll() {
-        List<Anime> animes = this.animeRepository.findAll();
-        List<AnimeRespDto> respDtos = new ArrayList<>();
-        animes.stream().forEach(a -> respDtos.add(this.animeMapper.toRespDto(a)));
-        return respDtos;
+    public Page<Anime> listAll(Pageable pageable) {
+        Page<Anime> animes = this.animeRepository.findAll(pageable);
+        return animes;
     }
 
     public Optional<Anime> findById(Long id) {

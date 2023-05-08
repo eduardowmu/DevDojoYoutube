@@ -8,6 +8,8 @@ import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.service.AnimeService;
 import br.edu.devdojo2.app.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +35,16 @@ public class AppController {
                 HttpStatus.CREATED : HttpStatus.EXPECTATION_FAILED);
     }
 
+    /*Por padrão, ao add o page já temos o Sort.
+    * http://localhost:8080/anime/list?page=0&sort=name,desc
+    * O link acima nos retorna a lista de animes, da respectiva
+    * página, em ordem decrescente do nome. Este SORT é feita a
+    * nível de banco de dados e não da aplicação.*/
     @GetMapping("/list")
-    public ResponseEntity<List<AnimeRespDto>> findAll() {
+    public ResponseEntity<Page<Anime>> findAll(Pageable pageable) {
         System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
-        List<AnimeRespDto> respDtos = animeService.listAll();;
-        return ResponseEntity.ok(respDtos);
+        Page<Anime> animes = animeService.listAll(pageable);
+        return ResponseEntity.ok(animes);
     }
 
     @GetMapping("/{id}")
