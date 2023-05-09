@@ -23,11 +23,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/anime")
 public class AppController {
-    @Autowired
-    private DateUtil dateUtil;
+    //private final DateUtil dateUtil;
+
+    private final AnimeService animeService;
 
     @Autowired
-    private AnimeService animeService;
+    public AppController(/*DateUtil dateUtil, */AnimeService animeService) {
+        //this.dateUtil = dateUtil;
+        this.animeService = animeService;
+    }
 
     @PostMapping("/save")//@Valid irá impedir que entre um body da requisição esteja com name invalido
     public ResponseEntity<HttpStatus> saveAnime(@RequestBody @Valid AnimePostReqDto reqDto) {
@@ -42,7 +46,7 @@ public class AppController {
     * nível de banco de dados e não da aplicação.*/
     @GetMapping("/list")
     public ResponseEntity<Page<Anime>> findAll(Pageable pageable) {
-        System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
+        //System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
         Page<Anime> animes = animeService.listAll(pageable);
         return ResponseEntity.ok(animes);
     }
@@ -51,7 +55,7 @@ public class AppController {
     *com restTemplate*/
     @GetMapping
     public ResponseEntity<List<Anime>> listAll() {
-        System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
+        //System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
         List<Anime> animes = animeService.findAll();
         return ResponseEntity.ok(animes);
     }

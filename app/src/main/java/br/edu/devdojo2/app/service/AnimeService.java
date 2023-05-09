@@ -17,11 +17,15 @@ import java.util.Optional;
 
 @Service
 public class AnimeService {
-    @Autowired
-    private AnimeRepository animeRepository;
+    private final AnimeRepository animeRepository;
+
+    private final AnimeMapper animeMapper;
 
     @Autowired
-    private AnimeMapper animeMapper;
+    public AnimeService(AnimeRepository animeRepository, AnimeMapper animeMapper) {
+        this.animeRepository = animeRepository;
+        this.animeMapper = animeMapper;
+    }
 
     /*Esta notação serve para quando queremos que, numa ação
     *indesejada na base de dados, o spring realize o rollback,
