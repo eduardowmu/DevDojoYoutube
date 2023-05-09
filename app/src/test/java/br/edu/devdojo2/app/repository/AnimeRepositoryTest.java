@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,12 +25,12 @@ class AnimeRepositoryTest {
     @BeforeEach
     void setup() {
         animeTest = createAnime();
-        animeSaved = this.animeRepository.save(animeTest);
     }
 
     @Test
     @DisplayName("Save Anime when successfull")
     void saveAnimeSucessfull() {
+        animeSaved = this.animeRepository.save(animeTest);
         Assertions.assertThat(animeSaved).isNotNull();
         Assertions.assertThat(animeSaved.getId()).isNotNull();
         Assertions.assertThat(animeSaved.getName().equals(animeTest.getName())).isTrue();
@@ -38,17 +39,23 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Update Anime when successfull")
     void updatedAnimeSucessfull() {
+        String name = this.animeTest.getName();
+        animeSaved = this.animeRepository.save(animeTest);
+
         animeSaved.setName("Huck");
+
         Anime animeUpdated = this.animeRepository.save(animeSaved);
 
         Assertions.assertThat(animeUpdated).isNotNull();
-        Assertions.assertThat(animeSaved.getId().equals(animeUpdated.getId()));
-        Assertions.assertThat(animeUpdated.getName().equals(animeTest.getName())).isFalse();
+        Assertions.assertThat(animeSaved.getId().equals(animeUpdated.getId())).isTrue();
+        Assertions.assertThat(animeUpdated.getName().equals(name)).isFalse();
     }
 
     @Test
     @DisplayName("Deleted Anime when successfull")
     void deletedAnimeSucessfull() {
+        animeSaved = this.animeRepository.save(animeTest);
+
         Long id = animeSaved.getId();
 
         this.animeRepository.delete(animeSaved);
@@ -61,11 +68,28 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Find Anime by name when successfull")
     void findByNameSucessfull() {
+        animeSaved = this.animeRepository.save(animeTest);
+
         List<Anime> animes = this.animeRepository.findByName(this.animeTest.getName());
 
         Boolean existe = this.existeAnimeName(animes);
 
         Assertions.assertThat(Boolean.TRUE.equals(existe)).isTrue();
+    }
+
+    @Test
+    @DisplayName("Save Anime throw constraint validation exception")
+    void saveAnimeThrowValidatedException() {
+        this.animeTest.setName(null);
+
+        Assertions.assertThatThrownBy(() -> this.animeRepository.save(animeTest))
+                .isInstanceOf(DataIntegrityViolationException.class);
+
+        /*
+        Assertions.assertThatExceptionOfType(DataIntegrityViolationException.class)
+                .isThrownBy(() -> this.animeRepository.save(this.animeTest))
+                .withMessageContaining("The name must not be null,The name must not be empty");
+        */
     }
 
     private Anime createAnime() {
