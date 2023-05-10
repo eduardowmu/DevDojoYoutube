@@ -81,7 +81,30 @@
             <version>2.9.0</version>
         </dependency>
     </dependencies>
-
+	<!--maven profiles para execução de testes, unitarios e integração,
+	de forma separada, pois sabemos que os testes integrados demora um
+	tempos consideravelmente maior que os unitários-->
+	<profiles>
+		<profile>
+			<id>integration-tests</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<includes>
+								<!--Qualquer arquivo que houver Integ, indica
+								que é uma classe de testes de integração, no caso,
+								pelo comando mvn test -P${id}-->
+								<include>**/*Integ.**</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<build>
 		<plugins>
 			<plugin>
