@@ -18,6 +18,13 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
+		<!--O unico problema dessa lib é que toda vez que iniciarmos
+		a aplicação, a senha será diferente. A solução para isso é
+		criarmos uma autenticação do usuário em memória.-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<!--dependencia que nos fornece libs que farão a validação
 			dos nossos campos-->
 		<dependency>

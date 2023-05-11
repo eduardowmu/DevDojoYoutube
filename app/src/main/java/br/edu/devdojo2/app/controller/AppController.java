@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,6 +36,10 @@ public class AppController {
         this.animeService = animeService;
     }
 
+
+    /*Supondo que queremos que sómente ADMIN possa executar esta requisição. Devemos também habilitar
+    * esta ação dentro da classe de configuração do security*/
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")//@Valid irá impedir que entre um body da requisição esteja com name invalido
     public ResponseEntity<HttpStatus> saveAnime(@RequestBody @Valid AnimePostReqDto reqDto) {
         return ResponseEntity.ok(this.animeService.save(reqDto) != null ?
@@ -66,6 +73,17 @@ public class AppController {
         return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
     }
 
+    /*Através desta requisição e parâmetros, podemos saber qual usuário está se
+    * authenticando*/
+    @GetMapping("/auth/{id}")
+    public ResponseEntity<Anime> findByIdAuthentication(@PathVariable Long id
+            //, @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        //System.out.println(userDetails.getUsername());
+        Optional<Anime> anime = this.animeService.findById(id);
+        return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
+    }
+
     /*A diferença entre PathVariable e RequestParam é que usando PathVariable,
     *Por mais que vc insira um nome de parametro diferente, o Spring não consegue
     *diferenciar o Long id do metodo findById() de findByName(). Além disso, o
@@ -76,7 +94,7 @@ public class AppController {
         return ResponseEntity.ok(respDtos);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<HttpStatus> deleteAnime(@PathVariable Long id) {
         Optional<Anime> anime = this.animeService.findById(id);
         if(anime.isPresent()) {
