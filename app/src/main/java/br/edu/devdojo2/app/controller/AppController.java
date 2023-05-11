@@ -7,6 +7,8 @@ import br.edu.devdojo2.app.dto.AnimeRespDto;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.service.AnimeService;
 import br.edu.devdojo2.app.util.DateUtil;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,7 +54,10 @@ public class AppController {
     * página, em ordem decrescente do nome. Este SORT é feita a
     * nível de banco de dados e não da aplicação.*/
     @GetMapping("/list")
-    public ResponseEntity<Page<Anime>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<Anime>> findAll(
+            /*Essa notação servirá para esconder o body da requisição pré escrita no
+            * OpenApi doc*/
+            @ParameterObject Pageable pageable) {
         //System.out.println("Buscado em ".concat(dateUtil.formatLocalDateStyle(LocalDateTime.now())));
         Page<Anime> animes = animeService.listAll(pageable);
         return ResponseEntity.ok(animes);

@@ -77,11 +77,16 @@ public class AnimeControllerInteg {
     void listAll_Returns_ListOfAnimesObjectWhenSuccessfull() {
         Anime animeSaved = this.animeRepository.save(AnimeCreator.createAnimeForPost());
 
-        AuthUser user = AuthUser.builder()
+        AuthUser user = new AuthUser();
+        user.setUserName("edu");
+        user.setPassword("{bcrypt}$2a$10$4Z.MwL.NT.yXJo5PcOuw6uSDHC37.8an8xrQPkzm0yhtNtVRchg42");
+        user.setAuthorities("ROLE_USER,ROLE_ADMIN");
+                                /*
                                 .userName("edu")
                                 .password("{bcrypt}$2a$10$4Z.MwL.NT.yXJo5PcOuw6uSDHC37.8an8xrQPkzm0yhtNtVRchg42")
                                 .authorities("ROLE_USER,ROLE_ADMIN")
                                 .build();
+                                */
 
         this.authUserRepository.save(user);
 

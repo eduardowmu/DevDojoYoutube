@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 /*Esta classe implementa UserDetails justamente porque
 * queremos usar um objeto que será persistido na base
 * de dados.*/
-@Builder
 @Entity
 public class AuthUser implements UserDetails {
     @Id
@@ -28,6 +27,22 @@ public class AuthUser implements UserDetails {
     private String password;
 
     private String authorities;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAuthorities(String authorities) {
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
