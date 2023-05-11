@@ -7,7 +7,10 @@ import br.edu.devdojo2.app.dto.AnimeRespDto;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.service.AnimeService;
 import br.edu.devdojo2.app.util.DateUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/*DOC: http://localhost:8080/swagger-ui.html
+* OU: http://localhost:8080/v3/api-docs*/
 @RestController
 @RequestMapping("/anime")
 public class AppController {
@@ -54,6 +59,11 @@ public class AppController {
     * página, em ordem decrescente do nome. Este SORT é feita a
     * nível de banco de dados e não da aplicação.*/
     @GetMapping("/list")
+    @Operation(summary = "It returns Objects' List, type of Anime, separated by Page",
+                description = "Each page has a sublist of Animes with size = 3",
+                /*Isso separa a requisição das demais listadas de forma padrão,
+                * identificando-a por um nome de tag*/
+                tags = "Animes' list page by page")
     public ResponseEntity<Page<Anime>> findAll(
             /*Essa notação servirá para esconder o body da requisição pré escrita no
             * OpenApi doc*/
@@ -100,6 +110,12 @@ public class AppController {
     }
 
     @DeleteMapping("/admin/delete/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                        description = "Quando a exclusão do anime obteve êxito"),
+            @ApiResponse(responseCode = "408",
+                    description = "Quando não foi encontrado o anime a ser excluído")
+    })
     public ResponseEntity<HttpStatus> deleteAnime(@PathVariable Long id) {
         Optional<Anime> anime = this.animeService.findById(id);
         if(anime.isPresent()) {
