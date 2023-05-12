@@ -44,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             * é levado em consideração. O recomendado é sempre colocar o mais
             * restritivo e privilegiado venha a ser primeiro*/
             .antMatchers("/anime/**").hasRole("USER")
+            .antMatchers("/actuator/**").permitAll()
             .anyRequest()
             /*E queremos que todas estejam autenticadas*/
             .authenticated().and()

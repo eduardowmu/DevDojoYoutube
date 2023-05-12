@@ -20,6 +20,17 @@
 		<springdoc-openapi-data-rest.version>1.7.0</springdoc-openapi-data-rest.version>
 	</properties>
 	<dependencies>
+		<!--https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html
+		Sempre que executar a aplicação, usar na URL com final "/actuator/health" para
+		saber o status da aplicação. Ver mais informações no tópico ENDPOINTS do site-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 		<!--https://springdoc.org/-->
 		<dependency>
 			<groupId>org.springdoc</groupId>
