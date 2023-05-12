@@ -18,6 +18,13 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
 		<springdoc-openapi-data-rest.version>1.7.0</springdoc-openapi-data-rest.version>
+		<jib-maven-plugin.version>3.3.1</jib-maven-plugin.version>
+		<docker.distroless.image>gcr.io/distroless/java:11</docker.distroless.image>
+		<!--proprio registro do docker-->
+		<docker.repo.url>registry.hub.docker.com/ewmurakoshi</docker.repo.url>
+		<!--https://hub.docker.com/repositories/ewmurakoshi-->
+		<docker.repo.project>app-springboot-anime</docker.repo.project>
+		<docker.image.name>${docker.repo.url}/${docker.repo.project}</docker.image.name>
 	</properties>
 	<dependencies>
 		<!--https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html
@@ -125,6 +132,25 @@
 			<id>integration-tests</id>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>com.google.cloud.tools</groupId>
+						<artifactId>jib-maven-plugin</artifactId>
+						<version>${jib-maven-plugin.version}</version>
+						<configuration>
+							<from>
+								<image>${docker.distroless.image}</image>
+							</from>
+							<to>
+								<image>${docker.image.name}</image>
+								<tags>
+									<tag>${project.version}</tag>
+								</tags>
+							</to>
+							<container>
+								<mainClass>br.edu.devdojo2.app.AppApplication</mainClass>
+							</container>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
