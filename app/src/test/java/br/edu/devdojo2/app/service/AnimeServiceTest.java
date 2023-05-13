@@ -79,9 +79,9 @@ class AnimeServiceTest {
     @DisplayName("FindById returns an valid Anime type when successfull")
     void findById_Returns_ListOfAnimesObjectWhenSuccessfull() {
         Long expectedId = AnimeCreator.createAnimeValid().getId();
-        Optional<Anime> anime = this.animeServiceMock.findById(anyLong());
+        Anime anime = this.animeServiceMock.findById(anyLong());
 
-        Assertions.assertThat(anime.isPresent()).isFalse();
+        Assertions.assertThat(anime.getId() == expectedId).isFalse();
         //Assertions.assertThat(anime.get().getName()).isNotEmpty();
         //Assertions.assertThat(anime.get().getId().equals(expectedId)).isTrue();
     }
