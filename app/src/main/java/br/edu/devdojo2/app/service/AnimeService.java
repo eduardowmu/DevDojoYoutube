@@ -1,11 +1,14 @@
 package br.edu.devdojo2.app.service;
 
+import br.edu.devdojo2.app.Exception.BadRequestException;
+import br.edu.devdojo2.app.Exception.NotFoundException;
 import br.edu.devdojo2.app.dto.AnimePostReqDto;
 import br.edu.devdojo2.app.dto.AnimeRespDto;
 import br.edu.devdojo2.app.mapper.AnimeMapper;
 import br.edu.devdojo2.app.model.Anime;
 import br.edu.devdojo2.app.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,7 +48,9 @@ public class AnimeService {
         return this.animeRepository.findAll();
     }
 
-    public Optional<Anime> findById(Long id) {
+    @Cacheable(cacheNames = "animes")
+    public Anime findById(Long id) {
+    //public Optional<Anime> findById(Long id) {
         /*
         *Podemos resolver tambem assim
         *
@@ -59,7 +64,9 @@ public class AnimeService {
         *   error:
         *       include-stackTrace: never
         * */
-        return this.animeRepository.findById(id);
+        System.out.println("anime");
+        return this.animeRepository.findById(id).orElseThrow(
+                () -> new BadRequestException("Anime nao encontrado"));
     }
 
     public List<AnimeRespDto> findByName(String name) {

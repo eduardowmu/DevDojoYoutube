@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -84,8 +85,9 @@ public class AppController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Anime> findById(@PathVariable Long id) {
-        Optional<Anime> anime = this.animeService.findById(id);
-        return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
+        Anime anime = this.animeService.findById(id);
+        //Optional<Anime> anime = this.animeService.findById(id);
+        return ResponseEntity.ok(anime);
     }
 
     /*Através desta requisição e parâmetros, podemos saber qual usuário está se
@@ -95,8 +97,8 @@ public class AppController {
             //, @AuthenticationPrincipal UserDetails userDetails
     ) {
         //System.out.println(userDetails.getUsername());
-        Optional<Anime> anime = this.animeService.findById(id);
-        return ResponseEntity.ok(anime.orElse(NotFoundException.notFoundException(new Anime())));
+        Anime anime = this.animeService.findById(id);
+        return ResponseEntity.ok(anime);
     }
 
     /*A diferença entre PathVariable e RequestParam é que usando PathVariable,
@@ -117,18 +119,20 @@ public class AppController {
                     description = "Quando não foi encontrado o anime a ser excluído")
     })
     public ResponseEntity<HttpStatus> deleteAnime(@PathVariable Long id) {
-        Optional<Anime> anime = this.animeService.findById(id);
+        Anime anime = this.animeService.findById(id);
+        /*
         if(anime.isPresent()) {
             this.animeService.delete(anime.get());
             return ResponseEntity.ok(HttpStatus.resolve(200));
         }
+        */
         return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update")
     public ResponseEntity<HttpStatus> updateAnime(@RequestBody AnimePostReqDto reqDto) {
-        Optional<Anime> request = this.animeService.findById(reqDto.getId());
-        return ResponseEntity.ok(request.isPresent() && this.animeService.save(reqDto) != null ?
+        Anime request = this.animeService.findById(reqDto.getId());
+        return ResponseEntity.ok(request!= null && this.animeService.save(reqDto) != null ?
                 HttpStatus.ACCEPTED : HttpStatus.BAD_REQUEST);
     }
 }
